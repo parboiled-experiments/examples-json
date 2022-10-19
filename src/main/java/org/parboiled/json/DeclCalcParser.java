@@ -1,27 +1,13 @@
 package org.parboiled.json;
 
 import org.parboiled.annotations.BuildParseTree;
-
+import org.parboiled.parserunners.ParseRunner;
 import org.parboiled.support.ParseTreeUtils;
 import org.parboiled.support.ParsingResult;
+import org.parboiled.util.ParseUtils;
 
 @BuildParseTree
-public class DeclCalcParser extends DeclParser<Object> {
-
-//	{
-//	 	"expr" : { "seq" : [ "__", "_d" , "__", { "_0n" : { "seq" : [ { "AnyOf" : "+-" }, "__", "_d", "__" ] } } ] }
-//	}
-
-//	{
-//	 	"expr" : { "seq" : [ "__", "%term%", "__", { "_0n" : { "seq" : [ { "AnyOf" : "+-" }, "__", "%term%", "__" ] } } ] },
-//	 	"term" : _d
-//	}
-
-//	{
-// 		"expr" : { "seq" : [ "__", "%term%", "__", { "_0n" : { "seq" : [ { "AnyOf" : "+-" }, "__", "%term%", "__" ] } } ] },
-//	 	"term" : { "seq" : "%factor%", "__", { "_0n" : { "seq" : [ { "AnyOf" : "+-" }, "__", "%factor%" ] } } ] },
-//	 	"factor" : "_d"
-//	}
+public class DeclCalcParser extends DeclParser {
 
 	private static String inputjson = "\n {"//
 			+ "\n 	\"expr\" : { \"seq\" : [ \"__\", \"%term%\", \"__\", { \"_0n\" : { \"seq\" : [ { \"AnyOf\" : \"+-\" }, \"__\", \"%term%\", \"__\" ] } } ] }, " //
@@ -33,11 +19,10 @@ public class DeclCalcParser extends DeclParser<Object> {
 		super("expr", inputjson);
 	}
 
-    private static DeclParserRunner<Object> parser = new DeclParserRunner<>(DeclCalcParser.class);
+	private static void parse(String string) throws Exception {
 
-    private static void parse(String string) throws Exception {
-
-		ParsingResult<?> result = parser.parse(string);
+		ParseRunner<?> runner = ParseUtils.createParseRunner(false, DeclCalcParser.class);
+		ParsingResult<?> result = runner.run(string);
 
 		System.out.println("--------------------------------------------");
 		System.out.println(" expr : " + string);
@@ -48,12 +33,14 @@ public class DeclCalcParser extends DeclParser<Object> {
 
 	}
 
-    public static void main(String[] args) throws Exception {
-        
-        parse(" 22 + 33 ");
-		parse(" 22 + 33 * 44  ");
-		parse(" 22 + ( 33 * 44 ) ");
+	public static void main(String[] args) throws Exception {
 
-    }
+//        parse(" 22 + 33 ");
+//		parse(" 22 + 33 * 44  ");
+//		parse(" 22 + ( 33 * 44 ) ");
+
+		parse(" 22 + ( 33 * 44 ) / 55 ");
+
+	}
 
 }
